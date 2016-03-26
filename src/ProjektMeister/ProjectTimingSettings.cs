@@ -1,6 +1,6 @@
 ﻿namespace ProjektMeister
 {
-    public class ActivitySettings
+    public class ProjectTimingSettings
     {
          
     }

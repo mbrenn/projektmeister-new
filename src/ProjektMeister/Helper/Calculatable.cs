@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjektMeister.Models
+namespace ProjektMeister.Helper
 {
     public class Calculatable<T>
     {
@@ -39,6 +39,16 @@ namespace ProjektMeister.Models
         }
 
         public T Calculated { get; set; }
+
+        public void Clear()
+        {
+            IsDefined = false;
+        }
+
+        public void Set(T value)
+        {
+            Defined = value;
+        }
 
         /// <summary>
         /// Converts the given element to a string

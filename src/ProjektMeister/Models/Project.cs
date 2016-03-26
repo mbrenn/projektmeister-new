@@ -8,7 +8,7 @@ namespace ProjektMeister.Models
     {
         public List<Activity> Activities { get; } = new List<Activity>();
 
-        public Calculatable< DateTime> Start { get; } = new Calculatable<DateTime>();
+        public Calculatable< DateTime> StartOfProject { get; } = new Calculatable<DateTime>();
 
         public Calculatable<DateTime> EndOfProject { get; } = new Calculatable<DateTime>();
 
@@ -19,6 +19,11 @@ namespace ProjektMeister.Models
         public IList<Activity> GetSortedActivities()
         {
             return TopologicalSort.Sort(Activities, x => x.Dependencies);
+        }
+
+        public void Add(Activity activity)
+        {
+            Activities.Add(activity);
         }
     }
 }
