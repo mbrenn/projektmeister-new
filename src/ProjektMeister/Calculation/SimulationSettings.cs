@@ -1,5 +1,4 @@
 ﻿using System;
-using ProjektMeister.Models;
 
 namespace ProjektMeister.Calculation
 {

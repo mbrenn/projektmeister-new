@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ProjektMeister.Models
+﻿namespace ProjektMeister.Models
 {
     public class ActivityDependency
     {
