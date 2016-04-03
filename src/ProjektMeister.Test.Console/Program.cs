@@ -1,5 +1,6 @@
 ﻿using System;
 using ProjektMeister.Calculation;
+using ProjektMeister.Logic;
 using ProjektMeister.Models;
 
 namespace ProjektMeister.Test.Console
@@ -23,7 +24,7 @@ namespace ProjektMeister.Test.Console
             {
                 Id = 2,
                 Name = "Vorbereiten",
-                Duration = { Defined = TimeSpan.FromDays(2) }
+                WorkLoad = { Defined = TimeSpan.FromHours(80) }
             };
             homeActivity.Dependencies.Add(prepareActivity);
             project.Add(prepareActivity);
@@ -37,11 +38,18 @@ namespace ProjektMeister.Test.Console
             finalizeActivity.Dependencies.AddRange(new [] {homeActivity, prepareActivity});
             project.Add(finalizeActivity);
 
-            var logic = new ProjectSimulation(new SimulationSettings());
-            logic.Simulate(project);
+            var logic = new ProjectSimulation(new SimulationSettings()
+            {
+                WorkTimeDefinition = WorkTimeDefinitions.OnWorkDays(8, 16)
+            });
+
+            var simulationResult = logic.Simulate(project);
             System.Console.WriteLine($"{prepareActivity}");
             System.Console.WriteLine($"{homeActivity}");
             System.Console.WriteLine($"{finalizeActivity}");
+
+            System.Console.WriteLine();
+            System.Console.WriteLine($"Loops: {simulationResult.Loops}");
 
             System.Console.ReadKey();
         }

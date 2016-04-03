@@ -21,6 +21,10 @@ namespace ProjektMeister.Models
             return TopologicalSort.Sort(Activities, x => x.Dependencies);
         }
 
+        /// <summary>
+        /// Adds an activity to the project
+        /// </summary>
+        /// <param name="activity">Activity to be added</param>
         public void Add(Activity activity)
         {
             Activities.Add(activity);

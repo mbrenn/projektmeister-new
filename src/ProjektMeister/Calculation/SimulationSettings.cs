@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjektMeister.Logic;
 
 namespace ProjektMeister.Calculation
 {
@@ -11,5 +12,7 @@ namespace ProjektMeister.Calculation
         public TimeSpan CalculationInterval { get; set; } = TimeSpan.FromHours(1);
 
         public DateTime LastSimulationDate { get; set; } = new DateTime(2099, 12, 31, 23, 59, 59);
+
+        public IWorkTimeDefinition WorkTimeDefinition { get; set; }
     }
 }

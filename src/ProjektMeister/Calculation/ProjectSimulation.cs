@@ -56,8 +56,10 @@ namespace ProjektMeister.Calculation
             return result;
         }
 
-        public void Simulate(Project project)
+        public SimulationResult Simulate(Project project)
         {
+            var result = new SimulationResult();
+
             if (project == null) throw new ArgumentNullException(nameof(project));
             _project = project;
 
@@ -72,6 +74,7 @@ namespace ProjektMeister.Calculation
             // Does the loop 
             while (!AreAllActivitiesDone() && _currentTime < _settings.LastSimulationDate)
             {
+                result.Loops++;
                 SimulateInterval(_settings.CalculationInterval);
             }
 
@@ -82,10 +85,12 @@ namespace ProjektMeister.Calculation
                 var information = pair.Value;
                 activity.StartDate.Calculated = information.StartDate;
                 activity.EndDate.Calculated = information.EndDate;
-                activity.Duration.Calculated = information.Done;
+                activity.Duration.Calculated = information.DurationDone;
             }
 
             project.EndOfProject.Calculated = _currentTime;
+
+            return result;
         }
 
         /// <summary>
@@ -110,15 +115,22 @@ namespace ProjektMeister.Calculation
                 }
 
                 // Progresses the activity
-                activityInInformation.Done += calculationInterval;
-
-                // Finalizes the activity
-                if (activity.Duration.IsDefined && activityInInformation.Done >= activity.Duration.Defined)
+                activityInInformation.DurationDone += calculationInterval;
+                if (_settings.WorkTimeDefinition?.MayWork(timeAtStart) == true)
                 {
-                    FinishActivity(activity, activityInInformation);
+                    // If it is working time, then add it to the work done, 
+                    activityInInformation.WorkDone += calculationInterval;
                 }
 
-                if (activity.EndDate.IsDefined && activity.EndDate.Defined < _currentTime)
+                // Finalizes the activity
+                var finalize = activity.Duration.IsDefined
+                               && activityInInformation.DurationDone >= activity.Duration.Defined;
+                finalize |= activity.EndDate.IsDefined
+                            && activity.EndDate.Defined < _currentTime;
+                finalize |= activity.WorkLoad.IsDefined
+                            && activityInInformation.WorkDone >= activity.WorkLoad.Defined;
+
+                if (finalize)
                 {
                     FinishActivity(activity, activityInInformation);
                 }
@@ -127,7 +139,7 @@ namespace ProjektMeister.Calculation
             if (!didOne)
             {
                 throw new InvalidOperationException(
-                    "We don't have a ready activity, but open activities. Circular dependencies");
+                    "We don't have a ready activity, but open activities. Circular dependencies?");
             }
         }
 

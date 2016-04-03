@@ -16,7 +16,18 @@ namespace ProjektMeister.Models
 
         public Calculatable<DateTime> EndDate { get; } = new Calculatable<DateTime>();
 
+        /// <summary>
+        /// Defines the duration of an activity
+        /// This definition is totally independent of the worktime.
+        /// </summary>
         public Calculatable<TimeSpan> Duration { get; set; } = new Calculatable<TimeSpan>();
+
+        /// <summary>
+        /// Defines the workload of an activity.
+        /// This workload is only performed during the worktime.
+        /// See also the interface IWorktimeDefinition. 
+        /// </summary>
+        public Calculatable<TimeSpan> WorkLoad { get; set; } = new Calculatable<TimeSpan>();
 
         public List<Activity> Dependencies { get; private set; } = new List<Activity>();
 

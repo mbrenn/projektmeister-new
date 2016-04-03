@@ -22,9 +22,14 @@ namespace ProjektMeister.Calculation
          public bool IsStarted { get; set; }
 
         /// <summary>
+        /// Stores the amount of duration that has been done within this activity
+        /// </summary>
+        public TimeSpan DurationDone { get; set; }
+
+        /// <summary>
         /// Stores the amount of work that has been done within this activity
         /// </summary>
-        public TimeSpan Done { get; set; }
+        public TimeSpan WorkDone { get; set; }
 
         /// <summary>
         /// Gets or sets the information when the work on the activity was started
