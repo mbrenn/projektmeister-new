@@ -102,7 +102,14 @@ namespace ProjektMeister.Calculation
             var timeAtStart = _currentTime;
             _currentTime += calculationInterval;
             var didOne = false;
-            foreach (var activity in GetReadyActivities().ToList())
+            var readyActivities = GetReadyActivities().ToList();
+            var workFactor = 1.0;
+            if (readyActivities.Count > _settings.AvailableResources)
+            {
+                workFactor = _settings.AvailableResources/readyActivities.Count;
+            }
+
+            foreach (var activity in readyActivities)
             {
                 didOne = true;
                 var activityInInformation = GetActivityInformation(activity);
@@ -119,7 +126,9 @@ namespace ProjektMeister.Calculation
                 if (_settings.WorkTimeDefinition?.MayWork(timeAtStart) == true)
                 {
                     // If it is working time, then add it to the work done, 
-                    activityInInformation.WorkDone += calculationInterval;
+                    var realWorkDone = TimeSpan.FromSeconds(
+                        calculationInterval.TotalSeconds*workFactor);
+                    activityInInformation.WorkDone += realWorkDone;
                 }
 
                 // Finalizes the activity

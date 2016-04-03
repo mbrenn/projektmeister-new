@@ -8,7 +8,7 @@ namespace ProjektMeister.Models
     {
         public List<Activity> Activities { get; } = new List<Activity>();
 
-        public Calculatable< DateTime> StartOfProject { get; } = new Calculatable<DateTime>();
+        public Calculatable<DateTime> StartOfProject { get; } = new Calculatable<DateTime>();
 
         public Calculatable<DateTime> EndOfProject { get; } = new Calculatable<DateTime>();
 

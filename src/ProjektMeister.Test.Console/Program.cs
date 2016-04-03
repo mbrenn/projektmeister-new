@@ -20,13 +20,23 @@ namespace ProjektMeister.Test.Console
             };
             project.Add(homeActivity);
 
+            var prepareActivity2 = new Activity
+            {
+                Id = 4,
+                Name = "Vorbereiten 2",
+                WorkLoad = { Defined = TimeSpan.FromHours(40) }
+            };
+            project.Add(prepareActivity2);
+
             var prepareActivity = new Activity
             {
                 Id = 2,
                 Name = "Vorbereiten",
                 WorkLoad = { Defined = TimeSpan.FromHours(80) }
             };
+
             homeActivity.Dependencies.Add(prepareActivity);
+            homeActivity.Dependencies.Add(prepareActivity2);
             project.Add(prepareActivity);
 
             var finalizeActivity = new Activity
@@ -40,11 +50,14 @@ namespace ProjektMeister.Test.Console
 
             var logic = new ProjectSimulation(new SimulationSettings()
             {
-                WorkTimeDefinition = WorkTimeDefinitions.OnWorkDays(8, 16)
+                WorkTimeDefinition = WorkTimeDefinitions.OnWorkDays(8, 16),
+                AvailableResources = 1.0,
+                CalculationInterval = TimeSpan.FromSeconds(1)
             });
 
             var simulationResult = logic.Simulate(project);
             System.Console.WriteLine($"{prepareActivity}");
+            System.Console.WriteLine($"{prepareActivity2}");
             System.Console.WriteLine($"{homeActivity}");
             System.Console.WriteLine($"{finalizeActivity}");
 
