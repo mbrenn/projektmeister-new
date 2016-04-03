@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using ProjektMeister.Calculation;
 using ProjektMeister.Models;
 
 namespace ProjektMeister.Test.Console
@@ -41,8 +42,8 @@ namespace ProjektMeister.Test.Console
             finalizeActivity.Dependencies.AddRange(new [] {homeActivity, prepareActivity});
             project.Add(finalizeActivity);
 
-            var logic = new ProjectTimingCalculator(new ProjectTimingSettings());
-            logic.PlanProject(project);
+            var logic = new ProjectSimulation(new SimulationSettings());
+            logic.Simulate(project);
             System.Console.WriteLine($"{prepareActivity}");
             System.Console.WriteLine($"{homeActivity}");
             System.Console.WriteLine($"{finalizeActivity}");

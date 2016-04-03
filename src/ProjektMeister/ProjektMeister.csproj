@@ -39,8 +39,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectTimingCalculator.cs" />
-    <Compile Include="ProjectTimingSettings.cs" />
+    <Compile Include="Calculation\ActivityInSimulation.cs" />
+    <Compile Include="Calculation\SimulationSettings.cs" />
+    <Compile Include="Calculation\ProjectSimulation.cs" />
     <Compile Include="Helper\TopologicalSort.cs" />
     <Compile Include="Helper\Calculatable.cs" />
     <Compile Include="Models\Project.cs" />
