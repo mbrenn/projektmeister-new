@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using ProjektMeister.Calculation;
 using ProjektMeister.Logic;
 using ProjektMeister.Models;
@@ -16,7 +17,7 @@ namespace ProjektMeister.Test.Console
             {
                 Id = 1,
                 Name = "Hausaufgaben",
-                Duration = {Defined = TimeSpan.FromDays(10)}
+                Duration = {Defined = TimeSpan.FromDays(20)}
             };
             project.Add(homeActivity);
 
@@ -51,11 +52,14 @@ namespace ProjektMeister.Test.Console
             var logic = new ProjectSimulation(new SimulationSettings()
             {
                 WorkTimeDefinition = WorkTimeDefinitions.OnWorkDays(8, 16),
-                AvailableResources = 1.0,
-                CalculationInterval = TimeSpan.FromSeconds(1)
+                AvailableResources = 1.0
             });
 
+            var watch = new Stopwatch();
+            watch.Start();
             var simulationResult = logic.Simulate(project);
+            watch.Stop();
+
             System.Console.WriteLine($"{prepareActivity}");
             System.Console.WriteLine($"{prepareActivity2}");
             System.Console.WriteLine($"{homeActivity}");
@@ -63,7 +67,7 @@ namespace ProjektMeister.Test.Console
 
             System.Console.WriteLine();
             System.Console.WriteLine($"Loops: {simulationResult.Loops}");
-
+            System.Console.WriteLine($"Time: {watch.Elapsed}");
             System.Console.ReadKey();
         }
     }

@@ -36,7 +36,7 @@ namespace ProjektMeister.Calculation
         /// <summary>
         /// Stores the information about the activities which are currently in simulation
         /// </summary>
-        private Dictionary<Activity, ActivityInSimulation> _activityInformation; 
+        private Dictionary<Activity, ActivityInSimulation> _activityInformation;
 
         public ProjectSimulation(SimulationSettings settings)
         {
@@ -93,6 +93,8 @@ namespace ProjektMeister.Calculation
             return result;
         }
 
+        private static List<Activity> readyActivities = new List<Activity>();
+
         /// <summary>
         /// Simulates a certain calculation
         /// </summary>
@@ -102,7 +104,12 @@ namespace ProjektMeister.Calculation
             var timeAtStart = _currentTime;
             _currentTime += calculationInterval;
             var didOne = false;
-            var readyActivities = GetReadyActivities().ToList();
+
+            // Gets a list of all ready activities. Uses cache, if necessary
+            readyActivities.Clear();
+            readyActivities.AddRange(GetReadyActivities());
+            
+            // Determines the workfactor
             var workFactor = 1.0;
             if (readyActivities.Count > _settings.AvailableResources)
             {
@@ -170,10 +177,15 @@ namespace ProjektMeister.Calculation
         /// <returns></returns>
         private IEnumerable<Activity> GetReadyActivities()
         {
-            return
-                _openActivities.Where(IsReady);
+            foreach (var activity in _openActivities)
+            {
+                if (IsReady(activity))
+                {
+                    yield return activity;
+                }
+            }
         }
-
+        
         /// <summary>
         /// Checks, if the activity is ready to be executed
         /// </summary>
@@ -182,7 +194,15 @@ namespace ProjektMeister.Calculation
         private bool IsReady(Activity activity)
         {
             // Returns all activities whose dependencies are satisfied
-            var ready =  activity.Dependencies.All(x => _closedActivities.Contains(x));
+            var ready = true;
+            foreach (var dep in activity.Dependencies)
+            {
+                ready &= _closedActivities.Contains(dep);
+                if (!ready)
+                {
+                    return false;
+                }
+            }
 
             // If the start date is defined, only if the start date is passed
             if (activity.StartDate.IsDefined)
